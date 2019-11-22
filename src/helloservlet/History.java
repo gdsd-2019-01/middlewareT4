@@ -21,16 +21,26 @@ public class History extends HttpServlet {
      response.setContentType("application/json");
      // Allocate a output writer to write the response message into the network socket
      PrintWriter out = response.getWriter();
-
+     String search =  request.getParameter("s");
+     System.out.println("search:"+search);
+     //search = "N";
      try {
     	 JSONArray jsonarray = new JSONArray();
     	
     	 
     	 try{
     		 Connection con = getConnection();
-             PreparedStatement statement = con.prepareStatement("SELECT * FROM amounts ORDER BY id DESC");
-            
-             ResultSet result = statement.executeQuery();
+    		 ResultSet result;
+    		 if(search == null || search.isEmpty()) {
+    			 System.out.println("control in if");
+    			 PreparedStatement statement = con.prepareStatement("SELECT * FROM amounts ORDER BY id DESC");
+                 result = statement.executeQuery();
+    		 } else {
+    			 System.out.println("control in else");
+    			 PreparedStatement statement = con.prepareStatement("SELECT * FROM amounts WHERE name LIKE '"+search+"%'");
+                 result = statement.executeQuery();
+    		 }
+             
         
              while(result.next()){
             	 JSONObject json = new JSONObject();

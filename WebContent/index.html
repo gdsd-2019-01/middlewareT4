@@ -1,40 +1,74 @@
 <html>
     <head>
         <title>Currency Converter</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://kit.fontawesome.com/a8b5752987.js" crossorigin="anonymous"></script>
         <script src="functions.js"></script>
         <style type="text/css">
         ::-webkit-scrollbar {
 		    width: 0px;
 		}
+		li{
+			box-shadow: 0px 0px 0px;
+			-webkit-transition:  box-shadow .2s ease-out;
+		}
+		li:hover{
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			-webkit-transition:  box-shadow .2s ease-in;
+		}
+		
+		.card{
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			-webkit-transition:  box-shadow .2s ease-in;
+		}
+
         </style>
     </head>
 
-    <body onload="loadHistory();loadVisits();">
+    <body onload='loadHistory("");loadVisits();' >
 
         <div class="container">
-            <div class="row jumbotron" style="margin-top: 40px;overflow: hidden;" id="row">
+          <!-- search -->
+          <div class="input-group"  style="margin-top: 50px;">
+              <div class="input-group-prepend">
+                <div class="input-group-text" style="background-color: inherit; border-right: 0px;border-radius: 50px 0px 0px 50px;">
+                <i class="fas fa-search"></i>
+                </div>
+              </div>
+              <input style="border-left: 0px;border-radius: 0px 50px 50px 0px;" type="text" class="form-control noSelect" placeholder="Search name" onkeyup="loadHistory(this.value)">
+            </div>
+          <!-- end search -->
+          <div class="card" style="margin-top: 50px; padding: 50px">
+          
+            <div class="row" style="margin-top: 40px;overflow: hidden;" id="row" >
+                
                 <div class="col">
-                        <div class="jumbotron"  id="convertWindow">
+                        <div id="convertWindow">
                                 <h3 class="display-4">Currency Converter</h3>
                                 Rates as of date: 27.10.2019
                                 <hr>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                      <div class="input-group-text">Customer</div>
+                                      <div class="input-group-text" style="background-color: inherit; border-right: 0px;border-radius: 50px 0px 0px 50px;">
+                                      <i class="far fa-user-circle"></i>
+                                      </div>
                                     </div>
-                                    <input type="text" class="form-control" id="customer" placeholder="Enter your name">
+                                    <input style="border-left: 0px;border-radius: 0px 50px 50px 0px;outline: none;" type="text" class="form-control" id="customer" placeholder="Enter your name">
                                   </div>
             
                                         <div class="input-group"  style="margin-top: 18px;">
                                           <div class="input-group-prepend">
-                                            <div class="input-group-text">Euro Amount</div>
+                                            <div class="input-group-text" style="background-color: inherit; border-right: 0px;border-radius: 50px 0px 0px 50px;">
+                                            <i class="fas fa-euro-sign"></i>
+                                            </div>
                                           </div>
-                                          <input type="number" class="form-control" id="currency1" placeholder="Enter Amount in Euro">
+                                          <input type="number" class="form-control" id="currency1" placeholder="Enter Amount in Euro" style="border-left: 0px;border-radius: 0px 50px 50px 0px;">
                                         </div>
             
                                         <div class="form-group" style="margin-top: 18px;">
-                                                <select class="form-control" id="currency2">
+                                                <select class="form-control" id="currency2" style=" border-radius: 50px;">
                                                   <option selected disabled value="0">Select Currency</option>
                                                   <option value="INR">Indian Rupee</option>
                                                   <option value="USD">United States Dollar</option>
@@ -45,28 +79,38 @@
             
                                         <div class="input-group" style="margin-bottom: 18px;">
                                                 <div class="input-group-prepend">
-                                                  <div class="input-group-text" id="ca">Converted Amount</div>
+                                                  <div class="input-group-text" id="ca" style="background-color: inherit; border-right: 0px;border-radius: 50px 0px 0px 50px;">
+                                                  <i class="fas fa-equals"></i>
+                                                  </div>
                                                 </div>
-                                                <input type="text" class="form-control" id="result"  placeholder="Converted Amount" disabled>
+                                                <input type="text" class="form-control" id="result"  placeholder="Converted Amount" disabled style="background-color: inherit;border-left: 0px;border-radius: 0px 50px 50px 0px;">
                                         </div>
-            
-                                        <button class="btn btn-outline-primary" onclick="sendback()">Convert</button>
-                                        <button class="btn btn-outline-danger" onclick="reset()">Reset</button>
-                                        <button class="btn btn-outline-success" id="counter">0</button>
-                                        <button class="btn btn-outline-dark" id="visit">0</button>                                        
+            							<hr>
+            							
+                                        <button style="border-radius:50px" class="btn btn-outline-primary" onclick="sendback()">Convert</button>
+                                        <button style="border-radius:50px; float: right; margin-left: 10px;height:37" class="btn btn-outline-dark" onclick="reset()"><i class="fas fa-retweet"></i></button>
+                                        <button style="border-radius:50px; float: right;"class="btn btn-outline-dark" id="visit">0</button>                                        
                         </div>
                 </div>
                 <!-- col 1 converter -->
-                <div id="historycol" class="col" style=" border-left: 1px solid black;">
+                <div id="historycol" class="col">
+                
+                 <h3 class="display-4" style="margin-left: 40px">Logs</h3>
+                 
+                 <button style="border-radius:50px;margin-left: 40px" class="btn btn-outline-dark" onclick="save()">
+                <i class="fas fa-file-download"></i>
+                </button>
+                
                 <!-- Database -->
-                    <div id="history" style="margin-left: 10px; height: inherit; overflow: auto;">
+                    <div id="history" style="margin-left: 10px; height: inherit; overflow: auto;padding:15px">
                     </div>
                 </div>
                 <!-- col 2 log -->
             </div>
             <!-- row -->
-        
-
+          
+           </div>        
+<!-- card -->
 
         </div>
 

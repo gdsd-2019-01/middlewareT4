@@ -21,11 +21,6 @@ public class HelloServlet extends HttpServlet {
      PrintWriter out = response.getWriter();
 
      try {
-    	 String jsonString = new JSONObject()
-                 .put("JSON1", "Hello World!")
-                 .put("JSON2", "Hello my World!")
-                 .put("JSON3", new JSONObject()
-                      .put("key1", "value1")).toString();
     	 float c1;
     	 float c2;
     	 c1 = Float.valueOf(request.getParameter("c1").trim()).floatValue();
@@ -46,8 +41,6 @@ public class HelloServlet extends HttpServlet {
          finally {
              System.out.println("Insert Completed.");
          }
-    	 
-        //out.println("<p>JSON: <strong>" + jsonString + "</strong></p>");
 
      } finally {
         out.close();  // Always close the output writer

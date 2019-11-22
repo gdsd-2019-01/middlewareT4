@@ -12,12 +12,12 @@ function reset(){
 /////////////////////////// Database /////////////////////////
 
 ////////////////// GET /////////////////////////
-function loadHistory(){
-
+function loadHistory(search){
+	
     //////////SET LOG DIV HEIGHTEQUAL TO CONVERTER HEIGHT//////////
     var elmnt = document.getElementById("convertWindow");
     var height = elmnt.offsetHeight
-    document.getElementById("historycol").style.height = height;
+    document.getElementById("historycol").style.height = height - 95;
     document.getElementById("row").style.height = height + 100;
 
     //////////// AJAX REQUEST TO GET DATA ////////////////////
@@ -45,11 +45,11 @@ function loadHistory(){
             list.appendChild(listItem);
             document.getElementById('history').appendChild(list);
         });
-            document.getElementById("counter").innerHTML = i + " Conversions Done";
+            
         }
     }
 
-    xhttp.open("GET", "history", true);
+    xhttp.open("GET", "history?s="+search, true);
     xhttp.send();
 }
 
@@ -62,7 +62,7 @@ function loadVisits(){
         if(this.readyState == 4 && this.status == 200)
         {
             var result = this.responseText;
-            document.getElementById("visit").innerHTML ="Visits: "+ result;
+            document.getElementById("visit").innerHTML ="<i class='fas fa-eye'></i> "+ result;
         }
     }
 
@@ -99,11 +99,32 @@ function sendback()
         { 
         	var resultx = this.responseText;
         	document.getElementById("result").value = resultx;
-        	loadHistory();
+        	loadHistory("");
      
         }
     }
 
     xhttp.open("GET", "server?c1="+c1+"&c2="+c2+"&name="+name+"&sign="+result, true);
     xhttp.send();
+}
+
+
+function save(){
+    
+	var doc = new jsPDF();
+	var specialElementHandlers = {
+	    '#editor': function (element, renderer) {
+	        return true;
+	    }
+	};
+	
+	doc.fromHTML($('#history').html(), 15, 15, {
+        'width': 170,
+            'elementHandlers': specialElementHandlers
+    });
+	
+	var d = new Date();
+	var rand = d.getTime();
+	
+    doc.save('history'+rand+'.pdf');
 }
